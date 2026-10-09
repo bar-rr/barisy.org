@@ -59,8 +59,9 @@ window.REFERENCES = [
     name: 'Prof. Ibrahim Aydoğdu',
     role:  { en: 'Academic Mentor', tr: 'Akademik Mentor' },
     isQuote: false,
-    quote: { en: 'Academic guidance and ongoing mentorship across system engineering initiatives.',
-             tr: 'Sistem mühendisliği girişimleri boyunca akademik rehberlik ve süregelen mentorluk.' }
+    quote: { en: "Special thanks for ongoing academic guidance, structural advice, and strategic mentorship across systems engineering and deep-tech initiatives.",
+             tr: "Sistem mühendisliği ve derin teknoloji girişimleri sürecindeki sürekli akademik rehberliği, yapısal tavsiyeleri ve stratejik mentorluğu için özel teşekkürlerimizle."
+    }
   },
   {
     name: 'Dr. Haydar Bolat',
