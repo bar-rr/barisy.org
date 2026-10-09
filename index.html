@@ -86,8 +86,8 @@ html[data-lang="tr"] .en{display:none!important}
 .form-msg{margin-top:12px;font-size:14px;color:var(--green);min-height:1em}
 .form-msg.err{color:var(--orange)}
 
-/* hover video preview (single shared element) */
-.vpop{position:fixed;left:0;top:0;z-index:1200;pointer-events:none;border:1px solid var(--border-strong);background:#000;box-shadow:0 14px 44px rgba(0,0,0,.9);border-radius:6px;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .15s}
+/* EKRANIN TAM ORTASINDA AÇILAN HOVER VIDEO POPUP */
+.vpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1200;pointer-events:none;border:1px solid var(--border-strong);background:#000;box-shadow:0 20px 60px rgba(0,0,0,.95);border-radius:8px;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .2s ease, visibility .2s ease;width:min(640px,90vw);height:auto;aspect-ratio:16/9}
 .vpop.on{opacity:1;visibility:visible}
 .vpop video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
 
@@ -458,7 +458,7 @@ footer{margin-top:48px;padding:24px 0;border-top:1px solid var(--border);display
 </footer>
 </div>
 
-<!-- shared hover video -->
+<!-- EKRANIN TAM ORTASINDA AÇILAN SHARED HOVER VIDEO -->
 <div class="vpop" id="vpop" aria-hidden="true">
   <video id="vpopVideo" muted loop playsinline preload="none" poster="assets/feedflow-poster.jpg">
     <source src="assets/feedflow-stack.mp4" type="video/mp4">
@@ -499,5 +499,56 @@ footer{margin-top:48px;padding:24px 0;border-top:1px solid var(--border);display
 <script src="references.js"></script>
 <script src="content.js"></script>
 <script src="app.js"></script>
+
+<script>
+// ---------- HOVER VİDEO MOUSE DAVRANIŞI & MERKEZDE AÇILMA ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const vpop = document.getElementById('vpop');
+  const vpopVideo = document.getElementById('vpopVideo');
+  const hoverTargets = document.querySelectorAll('[data-vhover]');
+
+  hoverTargets.forEach(target => {
+    target.addEventListener('mouseenter', () => {
+      vpop.classList.add('on');
+      if (vpopVideo) {
+        vpopVideo.currentTime = 0;
+        vpopVideo.play().catch(()=>{});
+      }
+    });
+
+    target.addEventListener('mouseleave', () => {
+      vpop.classList.remove('on');
+      if (vpopVideo) {
+        vpopVideo.pause();
+      }
+    });
+  });
+
+  // ---------- NEWSLETTER ABONELİK BİLDİRİMİ ----------
+  const forms = document.querySelectorAll('form[data-subscribe]');
+  forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msgContainer = form.parentElement.querySelector('.form-msg');
+      if (msgContainer) {
+        const lang = document.documentElement.getAttribute('data-lang') || 'en';
+        if (lang === 'tr') {
+          msgContainer.innerHTML = "Ücretsiz APK ve bültene kaydolduğunuz için teşekkürler! Tam versiyon APK'nız e-postanıza gönderilmiştir. Lütfen spam klasörünüzü kontrol edin.";
+        } else {
+          msgContainer.innerHTML = "Thank you for subscribing! Your full version APK has been sent to your email. Please check your spam folder.";
+        }
+        msgContainer.className = "form-msg";
+        
+        // Formu temizle ve mesajı 8 saniye sonra kaldır
+        form.reset();
+        setTimeout(() => {
+          msgContainer.innerHTML = "";
+        }, 8000);
+      }
+    });
+  });
+});
+</script>
+
 </body>
 </html>
