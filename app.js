@@ -218,13 +218,7 @@ function bindHoverEvents() {
   });
 }
 
-window.addEventListener('load', function () {
-  ensureSrc();
-  if (vvid) vvid.preload = 'auto';
-  bindHoverEvents();
-});
-
-/* ---------- subscribe (MAILTO YERİNE DOĞRUDAN MESAJ) ---------- */
+/* ---------- subscribe (MAILTO YERİNE DOĞRUDAN ONAY MESAJI) ---------- */
 function subscribe(form) {
   var input = form.querySelector('input[type=email]');
   var msg = form.parentElement.querySelector('.form-msg') || form.querySelector('.form-msg');
@@ -241,7 +235,7 @@ function subscribe(form) {
     return; 
   }
 
-  // Mail uygulamasını açmak yerine doğrudan onay mesajı göster
+  // Mailto tetikleme tamamen kaldırıldı, doğrudan ekrana basılıyor
   if (msg) {
     msg.style.display = 'block';
     msg.style.color = '#00E676';
@@ -255,14 +249,13 @@ function subscribe(form) {
   }, 10000);
 }
 
-document.addEventListener('submit', function (e) {
-  var f = e.target.closest('form[data-subscribe], .newsletter-form');
-  if (f) {
+$$('form[data-subscribe], .newsletter-form').forEach(function (f) {
+  f.addEventListener('submit', function (e) {
     e.preventDefault();
     e.stopPropagation();
     subscribe(f);
     return false;
-  }
+  });
 });
 
 /* ---------- 15 s pop-up ---------- */
