@@ -14,21 +14,20 @@ function sSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 var lang = 'en';
 var T = {
   en: { back: '← Back to ', tabs: { home: 'Home', work: 'Work', media: 'Media & Archive', lab: 'Lab', about: 'About', contact: 'Contact' },
-        ok: 'Thanks! Please check your inbox — the FeedFlow Stack link is on its way.', sending: 'Sending…', fail: 'Something went wrong. Please try again.',
+        ok: 'Thanks! The full FeedFlow Stack APK plus newsletter updates and news will arrive in your inbox shortly.', sending: 'Sending…', fail: 'Something went wrong. Please try again.',
         mail: 'Your email app will open to confirm the subscription.', bad: 'Please enter a valid email address.' },
   tr: { back: '← Geri: ', tabs: { home: 'Ana Sayfa', work: 'Çalışmalar', media: 'Medya & Arşiv', lab: 'Laboratuvar', about: 'Hakkımda', contact: 'İletişim' },
-        ok: 'Teşekkürler! Lütfen gelen kutunu kontrol et — FeedFlow Stack bağlantısı yolda.', sending: 'Gönderiliyor…', fail: 'Bir sorun oluştu. Lütfen tekrar dene.',
+        ok: 'Teşekkürler! FeedFlow Stack tam sürüm APK ile birlikte bülten ve haberler kısa sürede gelen kutuna gelecek.', sending: 'Gönderiliyor…', fail: 'Bir sorun oluştu. Lütfen tekrar dene.',
         mail: 'Aboneliği onaylamak için e-posta uygulaman açılacak.', bad: 'Lütfen geçerli bir e-posta adresi gir.' }
 };
 function setLang(l, persist) {
   lang = l === 'tr' ? 'tr' : 'en';
   root.lang = lang; root.dataset.lang = lang; document.body.dataset.lang = lang;
-  $$('[data-set-lang]').forEach(function (b) { b.classList.toggle('active', b.dataset.setLang === lang); });
+  \[ ('[data-set-lang]').forEach(function (b) { b.classList.toggle('active', b.dataset.setLang === lang); });
   if (persist) sSet('barisy_lang', lang);
   updateTitle();
   var bl = $('.back-link[data-sec]'); if (bl) bl.querySelector('.bl-pre').textContent = T[lang].back;
-}
-$$('[data-set-lang]').forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.setLang, true); }); });
+} \]('[data-set-lang]').forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.setLang, true); }); });
 
 /* ---------- helpers ---------- */
 function bi(o) { return '<span class="en">' + o.en + '</span><span class="tr">' + o.tr + '</span>'; }
@@ -61,64 +60,57 @@ function refCardHTML(r, full) {
   return '<div class="recognition-card"><strong>' + esc(r.name) + '</strong><div class="role">' + bi(r.role) + '</div>' +
     '<blockquote' + (r.isQuote === false ? ' style="font-style:normal"' : '') + '>' + qq + '</blockquote>' +
     (full && r.note ? '<p class="note">' + bi(r.note) + '</p>' : '') +
-    (r.link ? '<p class="note"><a href="' + r.link + '" target="_blank" rel="noopener">LinkedIn →</a></p>' : '') + '</div>';
+    '</div>';
 }
 function renderRefs() {
-  var refs = window.REFERENCES || [];
-  $('#refs-about').innerHTML = refs.map(function (r) { return refCardHTML(r, false); }).join('');
+  var list = window.REFERENCES || [];
+  var home = $('#refs-home');
+  if (home) home.innerHTML = list.slice(0, 3).map(function (r) { return refCardHTML(r, false); }).join('');
+  var full = $('#refs-full');
+  if (full) full.innerHTML = list.map(function (r) { return refCardHTML(r, true); }).join('');
 }
 
-/* ---------- router ---------- */
-var TABS = ['home', 'work', 'media', 'lab', 'about', 'contact'];
-var SEC_TAB = { media: 'media', work: 'work', about: 'about', insights: 'home' };
-var currentPage = null;
-function activateTab(name) {
-  $$('.tab-content').forEach(function (el) { el.classList.toggle('active', el.id === 'tab-' + name); });
-  $$('.tab').forEach(function (el) { el.classList.toggle('active', el.dataset.tab === name); });
-}
-function pageHTML(id, p) {
-  var tab = SEC_TAB[p.sec] || 'home';
-  var html = '<a class="back-link" data-sec="' + tab + '" href="#/' + (tab === 'home' ? '' : tab) + '"><span class="bl-pre">' + T[lang].back + '</span>' +
-    bi({ en: T.en.tabs[tab], tr: T.tr.tabs[tab] }) + '</a>';
-  html += '<div class="pv-kicker">' + (p.tag ? '<span class="inline-tag">' + p.tag + '</span>' : '') + '<span>' + bi(p.kind) + '</span><span>·</span><span>' + p.date + '</span>' +
-    (p.kicker ? '<span>·</span><span>' + bi(p.kicker) + '</span>' : '') + '</div>';
-  html += '<h1 class="pv-title">' + bi(p.title) + '</h1><div class="article">';
-  if (p.special === 'pdfcraft') {
-    var X = window.PDFCRAFT;
-    html += '<p class="lead">' + bi({ en: X.intro_en, tr: X.intro_tr }) + '</p>' +
-      '<div class="chips"><a class="chip" href="' + CFG.PDFCRAFT_URL + '" target="_blank" rel="noopener">' + bi({ en: X.open_en, tr: X.open_tr }) + '</a>' +
-      '<a class="chip" href="#/media/article-pdfcraft">' + bi({ en: X.article_en, tr: X.article_tr }) + '</a></div>' +
-      '<iframe class="pdf-frame" title="PDFCraft" src="' + CFG.PDFCRAFT_URL + '" loading="lazy" allow="clipboard-write; fullscreen" referrerpolicy="no-referrer"></iframe>' +
-      '<p class="pdf-note">' + bi({ en: 'If the tool does not load in this frame, use “Open in a new tab” above.', tr: 'Araç bu çerçevede yüklenmezse yukarıdaki “Yeni sekmede aç” bağlantısını kullanın.' }) + '</p>';
-  } else if (p.special === 'references') {
-    html += '<div class="recognition-list" style="max-width:820px">' + (window.REFERENCES || []).map(function (r) { return refCardHTML(r, true); }).join('') + '</div>';
-  } else {
-    html += '<div class="en">' + p.body.en + '</div><div class="tr">' + p.body.tr + '</div>';
-  }
-  return html + '</div>';
-}
+/* ---------- routing ---------- */
 function updateTitle() {
+  var h = location.hash || '#/';
+  var m = h.match(/^#\/([^/]+)(?:\/([^/]+))?/);
+  var sec = m ? m[1] : '';
+  var id = m ? m[2] : '';
   var base = 'barisy — AI Systems Builder';
-  document.title = currentPage ? PAGES[currentPage].title[lang] + ' — barisy' : base;
+  if (id && PAGES[id]) {
+    var t = PAGES[id].title;
+    document.title = (lang === 'tr' ? t.tr : t.en) + ' · barisy';
+  } else if (sec && T[lang].tabs[sec]) {
+    document.title = T[lang].tabs[sec] + ' · barisy';
+  } else document.title = base;
+}
+function showTab(name) {
+  \[ ('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === name); }); \]('.tab-content').forEach(function (c) { c.classList.toggle('active', c.id === 'tab-' + name); });
+  var pv = $('#page-view');
+  if (pv) { pv.classList.remove('active'); pv.innerHTML = ''; }
+}
+function showPage(id) {
+  var p = PAGES[id]; if (!p) { showTab('home'); return; }
+  showTab(p.sec === 'insights' ? 'home' : p.sec);
+  var pv = $('#page-view');
+  pv.innerHTML = '<a class="back-link" href="#/' + (p.sec === 'insights' ? '' : p.sec) + '" data-sec="' + p.sec + '"><span class="bl-pre">' + T[lang].back + '</span><span class="en">' + (T.en.tabs[p.sec] || p.sec) + '</span><span class="tr">' + (T.tr.tabs[p.sec] || p.sec) + '</span></a>' +
+    '<article class="article">' +
+    '<h1 class="pv-title">' + bi(p.title) + '</h1>' +
+    (p.date ? '<div class="pv-meta">' + p.date + (p.tag ? ' · ' + p.tag : '') + '</div>' : '') +
+    '<div class="pv-body">' + (typeof p.body === 'function' ? p.body() : bi(p.body || { en: '', tr: '' })) + '</div></article>';
+  pv.classList.add('active');
+  \[ ('.tab-content').forEach(function (c) { c.classList.remove('active'); });
+  updateTitle();
+  window.scrollTo(0, 0);
 }
 function route() {
-  var parts = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean);
-  hideVideo();
-  var view = $('#page-view');
-  if (parts.length >= 2 && PAGES[parts[1]]) {
-    var id = parts[1], p = PAGES[id];
-    currentPage = id;
-    view.innerHTML = pageHTML(id, p);
-    document.body.classList.add('subpage');
-    activateTab(SEC_TAB[p.sec] || 'home');
-    $$('.tab-content').forEach(function (el) { el.classList.remove('active'); });
-    window.scrollTo(0, 0);
-  } else {
-    currentPage = null;
-    document.body.classList.remove('subpage');
-    view.innerHTML = '';
-    activateTab(TABS.indexOf(parts[0]) > -1 ? parts[0] : 'home');
-  }
+  var h = location.hash || '#/';
+  var m = h.match(/^#\/([^/]+)(?:\/([^/]+))?/);
+  var sec = (m && m[1]) || '';
+  var id = (m && m[2]) || '';
+  if (id && PAGES[id]) { showPage(id); return; }
+  if (sec === 'work' || sec === 'media' || sec === 'lab' || sec === 'about' || sec === 'contact') showTab(sec);
+  else showTab('home');
   updateTitle();
 }
 window.addEventListener('hashchange', route);
@@ -142,10 +134,10 @@ document.addEventListener('click', function (e) {
   if (e.target.classList && e.target.classList.contains('modal-overlay')) closeModal(e.target);
 });
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') { $$('.modal-overlay.active').forEach(closeModal); $$('.profile-badge.open').forEach(function (b) { b.classList.remove('open'); }); }
+  if (e.key === 'Escape') { \]('.modal-overlay.active').forEach(closeModal); \[ ('.profile-badge.open').forEach(function (b) { b.classList.remove('open'); }); }
 });
 
-/* ---------- profile badge (touch) ---------- */
+/* ---------- profile badge ---------- */
 var badge = $('.profile-badge');
 badge.addEventListener('click', function (e) { if (!e.target.closest('.profile-hover-card')) badge.classList.toggle('open'); });
 document.addEventListener('click', function (e) { if (!e.target.closest('.profile-badge')) badge.classList.remove('open'); });
@@ -166,7 +158,13 @@ function placeVideo(anchor, mode) {
   var r = rootEl.getBoundingClientRect();
   var h = Math.min(380, vh - 2 * M), w;
   var x, y;
-  if (mode === 'above') {
+  if (mode === 'center') {
+    // Center of viewport — large enough to see, keeps Subscribe button usable (vpop is pointer-events:none)
+    h = Math.min(420, Math.floor(vh * 0.55));
+    w = h * ASPECT;
+    x = (vw - w) / 2;
+    y = (vh - h) / 2;
+  } else if (mode === 'above') {
     var above = r.top - GAP - M, below = vh - r.bottom - GAP - M;
     if (above >= 240) { h = Math.min(h, above); w = h * ASPECT; y = r.top - GAP - h; }
     else if (below >= 240) { h = Math.min(h, below); w = h * ASPECT; y = r.bottom + GAP; }
@@ -196,8 +194,7 @@ function showVideo(anchor) {
 function hideVideo() {
   if (!vActive && !vpop.classList.contains('on')) return;
   vActive = null; vpop.classList.remove('on'); vvid.pause();
-}
-$$('[data-vhover]').forEach(function (el) {
+} \]('[data-vhover]').forEach(function (el) {
   if (canHover) {
     el.addEventListener('mouseenter', function () { showVideo(el); });
     el.addEventListener('mouseleave', hideVideo);
@@ -232,7 +229,7 @@ function subscribe(form) {
       .then(function (r) { if (!r.ok) throw new Error(r.status); msg.textContent = T[lang].ok; input.value = ''; })
       .catch(function () { msg.classList.add('err'); msg.textContent = T[lang].fail; });
   } else {
-    msg.textContent = T[lang].mail;
+    msg.textContent = T[lang].ok + ' ' + T[lang].mail;
     var to = CFG.SUBSCRIBE_EMAIL_FALLBACK || 'hello@barisy.org';
     location.href = 'mailto:' + to + '?subject=' + encodeURIComponent('Subscribe: newsletter + FeedFlow Stack APK') +
       '&body=' + encodeURIComponent('Please subscribe me and send the FeedFlow Stack APK link.\n\nEmail: ' + email);
