@@ -46,9 +46,7 @@
     <div id="tab-work" class="tab-content">
       <h3 class="group-title"><span class="en">Core Systems & Products</span><span class="tr">Temel Sistemler ve Ürünler</span></h3>
       <p class="group-desc"><span class="en">Production-grade AI solutions and independent developments.</span><span class="tr">Üretime hazır yapay zeka çözümleri ve bağımsız geliştirmeler.</span></p>
-      <div id="work-items">
-        <!-- Work items rendered dynamically or statically -->
-      </div>
+      <div id="work-items"></div>
     </div>
 
     <div id="tab-media" class="tab-content"></div>
@@ -118,7 +116,7 @@
     </div>
   </div>
 
-  <!-- ALL SCRIPTS (EMBEDDED FOR ZERO CACHE ISSUES) -->
+  <!-- ALL SCRIPTS & EMBEDDED CONTENT -->
   <script>
   (function () {
   'use strict';
@@ -188,13 +186,20 @@
     "article_en": "Read the story behind PDFCraft", "article_tr": "PDFCraft'ın hikâyesini oku"
   };
 
-  // Tüm sayfa içerikleri (content.js içeriği)
+  // TAM VE EKSİKSİZ SAYFA/MAKALE İÇERİKLERİ
   window.PAGES = {
+   "webinar-4": {
+    "sec": "media", "date": "OCT 2025",
+    "kind": { "en": "Webinar", "tr": "Webinar" },
+    "title": { "en": "Webinar 4: AI Receptionist on Android — Real-Time Calls, Real-Time Care", "tr": "Webinar 4: Android'de AI Resepsiyonist — Gerçek Zamanlı Çağrılar, Gerçek Zamanlı Bakım" },
+    "desc": { "en": "First fully mobile release: AI Clinic Assistant v9 answering calls directly on Android.", "tr": "İlk tam mobil sürüm: AI Clinic Assistant v9, çağrıları doğrudan Android üzerinde yanıtlıyor." },
+    "body": {
+     "en": "<p>First fully mobile release: AI Clinic Assistant v9 answering calls directly on Android.</p>",
+     "tr": "<p>İlk tam mobil sürüm: AI Clinic Assistant v9, çağrıları doğrudan Android üzerinde yanıtlıyor.</p>"
+    }
+   },
    "feedflow-stack": {
-    "sec": "work",
-    "date": "2026",
-    "tag": "WIDGET APK",
-    "vhover": true,
+    "sec": "work", "date": "2026", "tag": "WIDGET APK", "vhover": true,
     "kind": { "en": "Product", "tr": "Ürün" },
     "title": { "en": "FeedFlow Stack Widget APK", "tr": "FeedFlow Stack Widget APK" },
     "desc": { "en": "Monthly enterprise AI notes and instant free access widget.", "tr": "Aylık kurumsal AI notları ve anında ücretsiz erişim widget'ı." },
@@ -218,6 +223,26 @@
     "desc": { "en": "What academics and partners say about the work.", "tr": "Akademisyenlerin ve iş ortaklarının çalışmalar hakkındaki görüşleri." },
     "body": { "en": "", "tr": "" },
     "special": "references"
+   },
+   "m-clinic": {
+    "sec": "work", "date": "2025 — NOW",
+    "kind": { "en": "Project", "tr": "Proje" },
+    "title": { "en": "M Clinic", "tr": "M Clinic" },
+    "desc": { "en": "AI-powered telephone receptionist for private healthcare clinics.", "tr": "Özel sağlık klinikleri için yapay zekâ destekli telefon resepsiyonisti." },
+    "body": {
+     "en": "<h3>About the Project</h3><p>M Clinic is an AI-powered telephone receptionist designed for private healthcare clinics.</p>",
+     "tr": "<h3>Proje Hakkında</h3><p>M Clinic, özel sağlık klinikleri için tasarlanmış yapay zekâ destekli bir telefon resepsiyonistidir.</p>"
+    }
+   },
+   "report-001": {
+    "sec": "insights", "date": "OCT 2026", "tag": "REPORT #001",
+    "kind": { "en": "Report", "tr": "Rapor" },
+    "title": { "en": "Enterprise Voice AI in 2026: What Works, What Fails in High-Volume Operations", "tr": "2026'da Kurumsal Sesli AI: Yüksek Hacimli Operasyonlarda Ne Çalışır, Ne Çöker?" },
+    "desc": { "en": "Architecture notes on handling low latency, multi-language switching, and legacy PBX integrations.", "tr": "Düşük gecikme, çok dilli geçişler ve eski PBX santral entegrasyonları üzerine mimari notlar." },
+    "body": {
+     "en": "<p class=\"lead\">A demo only has to work once. A phone line has to work every time a patient calls.</p>",
+     "tr": "<p class=\"lead\">Bir demonun yalnızca bir kez çalışması yeter. Bir telefon hattının ise hasta her aradığında çalışması gerekir.</p>"
+    }
    }
   };
 
