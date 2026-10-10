@@ -194,7 +194,6 @@ function ensureSrc() {
 }
 
 function showVideo() {
-  if (anyModalOpen()) return;
   ensureSrc();
   if (vpop) vpop.classList.add('on');
   if (vvid) {
@@ -210,7 +209,7 @@ function hideVideo() {
 }
 
 function bindHoverEvents() {
-  $$('[data-vhover], .has-vpreview, .newsletter').forEach(function (el) {
+  $$('[data-vhover], .has-vpreview, .newsletter, .lead-copy').forEach(function (el) {
     el.removeEventListener('mouseenter', showVideo);
     el.removeEventListener('mouseleave', hideVideo);
     el.addEventListener('mouseenter', showVideo);
