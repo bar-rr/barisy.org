@@ -184,8 +184,9 @@ if (badge) {
   document.addEventListener('click', function (e) { if (!e.target.closest('.profile-badge')) badge.classList.remove('open'); });
 }
 
-/* ---------- hover video (ekran ortasında açılma) ---------- */
+/* ---------- hover video (istenen durum bayrağı ve güvenli kapatma) ---------- */
 var vpop = $('#vpop'), vvid = $('#vpopVideo'), VSRC = 'assets/feedflow-stack.mp4';
+var wantVideo = false;
 
 function ensureSrc() { 
   if (vvid && !vvid.getAttribute('src')) { 
@@ -193,20 +194,28 @@ function ensureSrc() {
   } 
 }
 
-function showVideo() {
-  if (anyModalOpen()) return;
+function showVideo(e) {
+  if (anyModalOpen() && !(e && e.target && e.target.closest && e.target.closest('.modal-overlay'))) return;
+  wantVideo = true;
   ensureSrc();
   if (vpop) vpop.classList.add('on');
   if (vvid) {
-    try { vvid.currentTime = 0; } catch (e) {}
+    try { vvid.currentTime = 0; } catch (err) {}
     var pr = vvid.play(); 
     if (pr && pr.catch) pr.catch(function () {});
   }
 }
 
 function hideVideo() {
+  wantVideo = false;
   if (vpop) vpop.classList.remove('on');
-  if (vvid) vvid.pause();
+  if (vvid) { vvid.pause(); }
+}
+
+if (vvid) {
+  vvid.addEventListener('playing', function () {
+    if (!wantVideo) { vvid.pause(); if (vpop) vpop.classList.remove('on'); }
+  });
 }
 
 function bindHoverEvents() {
@@ -218,7 +227,9 @@ function bindHoverEvents() {
   });
 }
 
-/* ---------- subscribe (MAILTO YERİNE DOĞRUDAN ONAY MESAJI) ---------- */
+setTimeout(function () { ensureSrc(); if (vvid) vvid.load(); }, 1500);
+
+/* ---------- subscribe ---------- */
 function subscribe(form) {
   var input = form.querySelector('input[type=email]');
   var msg = form.parentElement.querySelector('.form-msg') || form.querySelector('.form-msg');
@@ -235,7 +246,6 @@ function subscribe(form) {
     return; 
   }
 
-  // Mailto tetikleme tamamen kaldırıldı, doğrudan ekrana basılıyor
   if (msg) {
     msg.style.display = 'block';
     msg.style.color = '#00E676';
@@ -266,6 +276,7 @@ function tryPopup() {
     return; 
   }
   sSet('barisy_popup_seen', '1');
+  hideVideo();
   openModal('leadModal');
 }
 setTimeout(tryPopup, CFG.POPUP_DELAY_MS || 15000);
